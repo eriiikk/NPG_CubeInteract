@@ -88,7 +88,7 @@
         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
         // Position the plane to be on the right side of the cube
-        plane.position.set(0.5001, 0, 0); // Position the plane on the right side
+        plane.position.set(0.51, 0, 0); // Position the plane on the right side
         plane.rotation.y = Math.PI / 2; // Rotate the plane to face outward
         cube.add(plane); // Add the plane to the scene
 
@@ -119,7 +119,24 @@
 
         // Add both mouse click and touchstart event listeners
         window.addEventListener('click', onMouseClick, false);
-        window.addEventListener('touchend', onTouchEnd, false);  // Handle touch input
+        // Use touchstart instead of touchend for better precision
+        window.addEventListener('touchstart', onTouchStart, false);
+
+        function onTouchStart(event) {
+            // Prevent default touch behavior to avoid mobile scrolling when interacting
+            event.preventDefault();
+
+            // Only handle the first touch point
+            if (event.touches.length === 1) {
+                const touch = event.touches[0];
+
+                // Calculate touch position in normalized device coordinates (-1 to +1)
+                pointer.x = (touch.clientX / window.innerWidth) * 2 - 1;
+                pointer.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+
+                checkIntersects();
+            }
+        }
 
         function onMouseClick(event) {
             // Calculate mouse position in normalized device coordinates (-1 to +1)
