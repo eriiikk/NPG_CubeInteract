@@ -17,7 +17,7 @@
     <style>
         body, html {
             margin: 0;
-            height: 100%;
+            height: 100%; 
         }
         #render-canvas {
             display: block;
@@ -115,44 +115,61 @@
             camera.updateProjectionMatrix();
         });
 
-        // Add mouse click event listener
+        // Add both mouse click and touchstart event listeners
         window.addEventListener('click', onMouseClick, false);
-        window.addEventListener('touchstart', onMouseClick, false);  // Handle touch input
+        window.addEventListener('touchstart', onTouchStart, false);  // Handle touch input
 
         function onMouseClick(event) {
             // Calculate mouse position in normalized device coordinates (-1 to +1)
             pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-            pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+            pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-            // Update the raycaster with the camera and mouse position
+            checkIntersects();
+        }
+
+        function onTouchStart(event) {
+            // Only handle the first touch point
+            if (event.touches.length === 1) {
+                const touch = event.touches[0];
+
+                // Calculate touch position in normalized device coordinates (-1 to +1)
+                pointer.x = (touch.clientX / window.innerWidth) * 2 - 1;
+                pointer.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+
+                checkIntersects();
+            }
+        }
+
+        function checkIntersects() {
+            // Update the raycaster with the camera and pointer position
             raycaster.setFromCamera(pointer, camera);
 
             // Calculate objects intersecting with the ray
             const intersects = raycaster.intersectObjects([plane]);
 
-           // Check if the popup is visible
-		   const isPopupVisible = popup.classList.contains('show');
+            // Check if the popup is visible
+            const isPopupVisible = popup.classList.contains('show');
 
-			// Get the bounding rectangle of the popup
-			const popupRect = popup.getBoundingClientRect();
+            // Get the bounding rectangle of the popup
+            const popupRect = popup.getBoundingClientRect();
 
-			// Check if the click is within the popup
-			const isInsidePopup = (
-				event.clientX >= popupRect.left &&
-				event.clientX <= popupRect.right &&
-				event.clientY >= popupRect.top &&
-				event.clientY <= popupRect.bottom
-			);
+            // Check if the click/tap is within the popup
+            const isInsidePopup = (
+                pointer.x >= popupRect.left &&
+                pointer.x <= popupRect.right &&
+                pointer.y >= popupRect.top &&
+                pointer.y <= popupRect.bottom
+            );
 
-			if (intersects.length > 0) {
-				//Click event
-				onPlaneClick();
-			} else if (isPopupVisible && !isInsidePopup) {
-				// If the popup is visible and the click was outside the popup, close it
-				popup.classList.remove('show'); // Remove class to trigger closing animation
-			}
-
+            if (intersects.length > 0) {
+                // Plane is clicked or tapped
+                onPlaneClick();
+            } else if (isPopupVisible && !isInsidePopup) {
+                // If the popup is visible and the click/tap was outside, close it
+                popup.classList.remove('show'); // Remove class to trigger closing animation
+            }
         }
+
 
         // Custom function called when the plane is clicked
         function onPlaneClick() {
