@@ -146,8 +146,14 @@
 
         // Directional light
         const directionalLight = new THREE.DirectionalLight(0xf4f8ea, 1);
-        directionalLight.position.set(5, 15, 5); // position the light source
+        directionalLight.position.set(5, 10, 5); // position the light source
         scene.add(directionalLight);
+
+        // Rim light for highlighting
+        const rimLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        rimLight.position.set(-5, 5, 10);
+        rimLight.castShadow = true; // Enable shadows for depth
+        scene.add(rimLight);
 
         // Add OrbitControls to allow zooming and rotation
         const controls = new OrbitControls(camera, renderer.domElement);
