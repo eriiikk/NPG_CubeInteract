@@ -62,6 +62,7 @@
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
         //Setup canvas and raycast to track screen clicks to 3D space
         var renderCanvas = document.getElementById('render-canvas');
@@ -71,17 +72,60 @@
         // Set up scene, camera, and renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, renderCanvas.offsetWidth/renderCanvas.offsetHeight, 0.1, 1000);
-        camera.position.z = 2.5;
+        camera.position.z = 2.0;
         const renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setSize(renderCanvas.offsetWidth, renderCanvas.offsetHeight);
         renderCanvas.appendChild(renderer.domElement);
 
         // Create a cube
+        /*
         const cubeGeometry = new THREE.BoxGeometry();
         const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xfcfcfc,  metalness: 0.3, roughness: 0.7 });
         const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
         cube.rotation.y = 0.3; // Rotate slightly for more interesting starting angle
         scene.add(cube);
+        */
+
+        //Load model instead of cube
+        //Cardbox model CC0 from https://www.cgtrader.com/free-3d-models/household/other/cc0-cardboard-box-closed
+        const gltfLoader = new GLTFLoader();
+        const textureLoader = new THREE.TextureLoader();
+
+        // Load the textures
+        const albedoTexture = textureLoader.load('models/CardboardBoxClosedAlbedo1024.png');
+        const normalTexture = textureLoader.load('models/CardboardBoxClosedNormal1024.png');
+        const metallicRoughnessTexture = textureLoader.load('models/CardboardBoxClosedRough1024.png');
+
+        // Load the GLTF model
+        let model;
+        gltfLoader.load('models/cc0_-_cardboard_box_closed_1K.glb', (gltf) => {
+            model = gltf.scene;
+            // Create a new MeshStandardMaterial with textures
+            const cardboxMaterial = new THREE.MeshStandardMaterial({
+                map: albedoTexture,
+                normalMap: normalTexture,
+                metalnessMap: metallicRoughnessTexture,
+                roughnessMap: metallicRoughnessTexture,
+                metalness: 0.4,
+                roughness: 0.8,
+            });
+
+            // Apply albedo and normal maps to all materials of the model
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    child.material = cardboxMaterial;
+                }
+            });
+
+            // Rotate the model slightly for a better starting angle
+            scene.rotation.y = 0.35; //Rotate scene instead of object to keep the box and plane aligned
+            model.scale.set(2.5,2.5,2.5);
+
+            // Add the model to the scene
+            scene.add(model);
+        }, undefined, (error) => {
+            console.error('Error loading the model:', error);
+        });
 
         // Add a plane on the right side of the cube (clickable button)
         const planeGeometry = new THREE.PlaneGeometry(0.25, 0.25); // Create a plane
@@ -92,9 +136,9 @@
         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
         // Position the plane to be on the right side of the cube
-        plane.position.set(0.51, 0, 0); // Position the plane on the right side
+        plane.position.set(0.4524, 0, 0); // Position the plane on the right side
         plane.rotation.y = Math.PI / 2; // Rotate the plane to face outward
-        cube.add(plane); // Add the plane to the cube
+        scene.add(plane); // Add the plane
 
         // Ambient light
         const ambientLight = new THREE.AmbientLight(0xf8f1ea, 0.5);
