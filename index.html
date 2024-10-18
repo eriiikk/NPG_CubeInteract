@@ -17,6 +17,7 @@
     <style>
         body, html {
             margin: 0;
+            overflow: hidden;
         }
         #render-canvas {
             display: block;
@@ -39,6 +40,7 @@
             pointer-events: none; /* Prevent interaction when hidden */
 			border-left: 1px solid #000000;
 			padding-left: 1vw;
+            overflow: auto;
         }
         #popup.show {
             margin: auto;
@@ -50,22 +52,23 @@
 </head>
 
 <body>
-    <canvas id="render-canvas"></canvas>
+    <div id="render-canvas">lol</div>
 	<div id="popup">Loading content...</div>
 
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        const canvas = document.getElementById('render-canvas');
+        var renderCanvas = document.getElementById('render-canvas');
         const raycaster = new THREE.Raycaster();
         const pointer = new THREE.Vector2();
 
         // Set up scene, camera, and renderer
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+        const camera = new THREE.PerspectiveCamera(75, renderCanvas.offsetWidth/renderCanvas.offsetHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(renderCanvas.offsetWidth, renderCanvas.offsetHeight);
+        renderCanvas.appendChild(renderer.domElement);
 
         // Create a cube
         const cubeGeometry = new THREE.BoxGeometry();
@@ -111,11 +114,14 @@
         // Handle window resizing
         window.addEventListener('resize', () => {
            // Ensure the renderer size matches the window's size
-            renderer.setSize(window.innerWidth, window.innerHeight);
+           camera.aspect = renderCanvas.offsetWidth / renderCanvas.offsetHeight;
+           camera.updateProjectionMatrix();
 
-            // Adjust the camera aspect ratio to the new size
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
+           renderer.setSize(renderCanvas.offsetWidth, renderCanvas.offsetHeight);
+           
+            // Calculate the new right position based on window width
+            // Fix bug with popup window when changing from vertical to horizonal mode on mobile
+            //popup.style.right = `-40%`; // Start off-screen
         });
 
 
