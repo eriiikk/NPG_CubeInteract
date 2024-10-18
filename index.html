@@ -12,7 +12,7 @@
         "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
       }
     }
-  </script>
+    </script>
 
     <style>
         body, html {
@@ -35,9 +35,7 @@
             transition: opacity 0.5s ease, right 0.5s ease;
             width: 40%;
             height: 80%;
-
-            background: linear-gradient(145deg, rgba(42, 100, 246, 0.75), rgba(42, 100, 246, 0.25)); /* Darker gradient */
-    
+            background: linear-gradient(145deg, rgba(42, 100, 246, 0.75), rgba(42, 100, 246, 0.25)); /* Dark blue */
             backdrop-filter: blur(15px) contrast(25%);
             pointer-events: none;
 			border: 5px solid #2A64F6;
@@ -45,7 +43,6 @@
 			padding: 1.25vw;
             padding-left: 2.5vw;
             overflow: auto;
-
             border-top-left-radius: 3px; 
             border-bottom-left-radius: 3px; 
         }
@@ -115,17 +112,18 @@
         controls.screenSpacePanning = false; // Prevent panning up/down when dragging with left mouse
 
         // Handle window resizing
-        window.addEventListener('resize', () => {
-           // Ensure the renderer size matches the window's size
-           camera.aspect = renderCanvas.offsetWidth / renderCanvas.offsetHeight;
-           camera.updateProjectionMatrix();
-           renderer.setSize(renderCanvas.offsetWidth, renderCanvas.offsetHeight);
-        });
+        window.addEventListener('resize', onResize, false);
 
         // Add mouse click, mouse over and touchstart event listeners
         window.addEventListener('click', onMouseClick, false);
         window.addEventListener('touchstart', onTouchStart, false);
         window.addEventListener('mousemove', onMouseMove, false);
+
+        function onResize(event) {
+            camera.aspect = renderCanvas.offsetWidth / renderCanvas.offsetHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(renderCanvas.offsetWidth, renderCanvas.offsetHeight);
+        }
 
         function onTouchStart(event) {
             event.preventDefault(); // Prevent default scrolling behavior
