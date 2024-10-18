@@ -27,7 +27,7 @@
             width: 100vw;
             height: 100vh;
         }
-		#popup {
+        #popup {
             position: absolute;
             top: 0;
             right: -40vw; /* Start off-screen */
@@ -63,9 +63,9 @@
 
         // Set up scene, camera, and renderer
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth/canvas.clientHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
         // Create a cube
         const cubeGeometry = new THREE.BoxGeometry();
@@ -75,6 +75,7 @@
         // Set the cube's initial rotation
         cube.rotation.y = 0.3; // Rotate slightly on the y-axis
 
+        //Add cube to scene
         scene.add(cube);
 
         // Position the camera slightly away from the cube
@@ -82,7 +83,7 @@
 
         // Add a plane on the right side of the cube
         const planeGeometry = new THREE.PlaneGeometry(0.25, 0.25); // Create a plane
-        const planeTexture = new THREE.TextureLoader().load('infoGFX.png'); // Replace with your image path
+        const planeTexture = new THREE.TextureLoader().load('infoGFX.png'); // Load image
         const planeMaterial = new THREE.MeshBasicMaterial({ map: planeTexture, side: THREE.DoubleSide, transparent: true });
         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
@@ -116,6 +117,7 @@
 
         // Add mouse click event listener
         window.addEventListener('click', onMouseClick, false);
+        window.addEventListener('touchstart', onMouseClick, false);  // Handle touch input
 
         function onMouseClick(event) {
             // Calculate mouse position in normalized device coordinates (-1 to +1)
@@ -143,7 +145,7 @@
 			);
 
 			if (intersects.length > 0) {
-				console.log('Plane clicked!');
+				//Click event
 				onPlaneClick();
 			} else if (isPopupVisible && !isInsidePopup) {
 				// If the popup is visible and the click was outside the popup, close it
@@ -157,6 +159,9 @@
 			popup.innerHTML = "Loading...";
 			popup.classList.add('show'); // Add the class to trigger the animation
 			loadPopupContent('popup.html');
+
+            //Code to handle Scorm wrapper for Cornerstone systems goes here
+            ///...
         }
 
 		async function loadPopupContent(url) {
