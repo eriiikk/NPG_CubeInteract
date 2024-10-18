@@ -109,21 +109,17 @@
         controls.screenSpacePanning = false; // Prevent panning up/down when dragging with left mouse
 
         // Handle window resizing
-        // Handle window resizing
         window.addEventListener('resize', () => {
-            //const width = window.innerWidth;
-            //const height = window.innerHeight;
-
             // Update camera aspect ratio and renderer size on resize
             camera.aspect = canvas.clientWidth/canvas.clientHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(width, height);
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
         });
 
 
         // Add both mouse click and touchstart event listeners
         window.addEventListener('click', onMouseClick, false);
-        window.addEventListener('touchstart', onTouchStart, false);  // Handle touch input
+        window.addEventListener('touchend', onTouchEnd, false);  // Handle touch input
 
         function onMouseClick(event) {
             // Calculate mouse position in normalized device coordinates (-1 to +1)
@@ -133,7 +129,7 @@
             checkIntersects();
         }
 
-        function onTouchStart(event) {
+        function onTouchEnd(event) {
         // Prevent default touch behavior to avoid mobile scrolling when interacting
         event.preventDefault();
 
