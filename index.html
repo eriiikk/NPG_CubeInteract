@@ -29,18 +29,22 @@
         }
         #popup {
             position: absolute;
-            top: 0;
+            top: 10%;
             right: -40%; /* Start off-screen */
             opacity: 0; /* Hidden by default */
             transition: opacity 0.5s ease, right 0.5s ease;
             width: 40%;
-            height: 100%;
+            height: 80%;
             background: linear-gradient(145deg, rgba(240, 248, 255, 0.92), rgba(230, 240, 255, 0.82));
             backdrop-filter: blur(15px) contrast(50%);
             pointer-events: none;
 			border: 1px dashed #000000;
-			padding-left: 1vw;
+            border-right: 0;
+			padding: 1.25vw;
             overflow: auto;
+
+            border-top-left-radius: 15px; 
+            border-bottom-left-radius: 15px; 
         }
         #popup.show {
             margin: auto;
@@ -82,8 +86,8 @@
         // Add a plane on the right side of the cube (clickable button)
         const planeGeometry = new THREE.PlaneGeometry(0.25, 0.25); // Create a plane
         const planeTexture = new THREE.TextureLoader().load('infoGFX.png'); // Load image
-        const planeMaterial = new THREE.MeshBasicMaterial({ map: planeTexture, side: THREE.DoubleSide, transparent: true });
-        const planeHoverMaterial = new THREE.MeshBasicMaterial({ map: planeTexture, color: 0x474a61, side: THREE.DoubleSide, transparent: true }); // Material for hover FX
+        const planeMaterial = new THREE.MeshBasicMaterial({ map: planeTexture, color: 0xB0C4DE, side: THREE.DoubleSide, transparent: true });
+        const planeHoverMaterial = new THREE.MeshBasicMaterial({ map: planeTexture, color: 0x1F5BB8, side: THREE.DoubleSide, transparent: true }); // Material for hover FX
 
         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
@@ -194,12 +198,14 @@
                     // Change the material to hover material
                     plane.material = planeHoverMaterial;
                     previousIntersected = plane; // Update previously intersected
+                    renderCanvas.style.cursor = 'pointer';
                 }
             } else {
                 // Reset to original material if not hovering
                 if (previousIntersected !== null) {
                     plane.material = planeMaterial;
                     previousIntersected = null; // Reset previous intersected
+                    renderCanvas.style.cursor = 'auto';
                 }
             }
         }
