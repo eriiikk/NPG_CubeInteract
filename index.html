@@ -73,7 +73,7 @@
         // Convert string to a number
         previousStoredClickAmount = Number(previousStoredClickAmount);
 
-        // Check if it's NaN and initialize it to 0 if it is
+        // Set to 0 if not a valid number
         if (isNaN(previousStoredClickAmount)) {
             previousStoredClickAmount = 0;
         }
@@ -98,16 +98,7 @@
         renderer.setSize(renderCanvas.offsetWidth, renderCanvas.offsetHeight);
         renderCanvas.appendChild(renderer.domElement);
 
-        // Create a cube
-        /*
-        const cubeGeometry = new THREE.BoxGeometry();
-        const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xfcfcfc,  metalness: 0.3, roughness: 0.7 });
-        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        cube.rotation.y = 0.3; // Rotate slightly for more interesting starting angle
-        scene.add(cube);
-        */
-
-        //Load model instead of cube
+        //Load model
         //Cardbox model CC0 from https://www.cgtrader.com/free-3d-models/household/other/cc0-cardboard-box-closed
         const gltfLoader = new GLTFLoader();
         const textureLoader = new THREE.TextureLoader();
@@ -308,7 +299,7 @@
 			popup.innerHTML = "Loading...";
 			popup.classList.add('show'); // Add the class to trigger the animation
 			loadPopupContent('popup.html');
-
+            
             clickEventScrum();
         }
 
