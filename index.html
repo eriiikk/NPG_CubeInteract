@@ -299,16 +299,19 @@
 			popup.innerHTML = "Loading...";
 			popup.classList.add('show'); // Add the class to trigger the animation
 			loadPopupContent('popup.html');
+            
             clickEventScrum();
         }
 
         // Write data to Scrum
         function clickEventScrum() {
             //Code to handle Scorm wrapper for Cornerstone systems goes here
-            previousStoredClickAmount += 1; //Convert to numbers before adding, so we don't get 1 + 1 = 11
+            previousStoredClickAmount += 1;
             scorm.set('cmi.core.score.raw', previousStoredClickAmount);
             scorm.set('cmi.core.lesson_status', 'completed');
+
             //Add any other variables here, such as timestamp, IP etc
+            // ...
 
             // Push updates
             scorm.save();
