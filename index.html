@@ -5,6 +5,7 @@
     <title>NPG Test - Kube</title>
     <meta name="description" content="Interaktiv 3D kube">
 
+    <script src="js/SCORM_API_wrapper.js"></script>
     <script type="importmap">
     {
       "imports": {
@@ -60,6 +61,25 @@
 	<div id="popup">Loading content...</div>
 
     <script type="module">
+
+        // Scorm wrapper
+        var scorm = pipwerks.SCORM;
+        scorm.init();
+
+        // Using 'cmi.core.score.raw' to store click data in Scrum, as this is easy visible in Scorm Cloud
+        // Need to change for production
+        var previousStoredClickAmount = scorm.get('cmi.core.score.raw');
+
+        // Convert string to a number
+        previousStoredClickAmount = Number(previousStoredClickAmount);
+
+        // Check if it's NaN and initialize it to 0 if it is
+        if (isNaN(previousStoredClickAmount)) {
+            previousStoredClickAmount = 0;
+        }
+
+
+        //Three JS
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -289,8 +309,22 @@
 			popup.classList.add('show'); // Add the class to trigger the animation
 			loadPopupContent('popup.html');
 
+            clickEventScrum();
+        }
+
+        // Write data to Scrum
+        function clickEventScrum() {
             //Code to handle Scorm wrapper for Cornerstone systems goes here
-            ///...
+            previousStoredClickAmount += 1; //Convert to numbers before adding, so we don't get 1 + 1 = 11
+            scorm.set('cmi.core.score.raw', previousStoredClickAmount);
+            scorm.set('cmi.core.lesson_status', 'completed');
+            //Add any other variables here, such as timestamp, IP etc
+
+            // Push updates
+            scorm.save();
+            
+            // For debug
+            //console.error('Registered ' + previousStoredClickAmount + ' clicks');
         }
         
         async function loadPopupContent(url) {
