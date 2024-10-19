@@ -187,8 +187,15 @@
                 //pointer.y = -(touch.clientY / renderer.domElement.clientHeight) * 2 + 1;
 
                 // Use clientX and clientY to account for zoom level
-                pointer.x = (touch.clientX / window.innerWidth) * 2 - 1;
-                pointer.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+                //pointer.x = (touch.clientX / window.innerWidth) * 2 - 1;
+                //pointer.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+
+                // Get canvas bounds
+                const rect = renderer.domElement.getBoundingClientRect();
+                
+                // Calculate touch position relative to the canvas
+                pointer.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+                pointer.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
 
                 checkIntersects();
             }
