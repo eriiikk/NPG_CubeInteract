@@ -65,6 +65,7 @@
         // Scorm wrapper
         var scorm = pipwerks.SCORM;
         scorm.init();
+        scorm.set('cmi.core.lesson_status', 'incomplete'); //Reset status when starting
 
         // Using 'cmi.core.score.raw' to store click data in Scrum, as this is easy visible in Scorm Cloud
         // Need to change for production
