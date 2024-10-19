@@ -221,11 +221,20 @@
 
             // Get the bounding rectangle of the popup
             const popupRect = popup.getBoundingClientRect();
+            let clickX, clickY;
 
             // Check if the click/tap is within the popup
             // Calculate actual click position relative to the viewport using clientX and clientY
-            const clickX = event.clientX;
-            const clickY = event.clientY;
+            if (event.touches && event.touches.length > 0) {
+                // Handle touch event
+                const touch = event.touches[0];
+                clickX = touch.clientX;
+                clickY = touch.clientY;
+            } else {
+                // Handle mouse click event (for desktop)
+                clickX = event.clientX;
+                clickY = event.clientY;
+            }
 
             // Check if the click/tap is within the popup (using the bounding box of the popup in screen coordinates)
             const isInsidePopup = (
