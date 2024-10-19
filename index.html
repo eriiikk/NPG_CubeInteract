@@ -107,8 +107,8 @@
                 normalMap: normalTexture,
                 metalnessMap: metallicRoughnessTexture,
                 roughnessMap: metallicRoughnessTexture,
-                metalness: 0.4,
-                roughness: 0.8,
+                metalness: 0.1,
+                roughness: 0.85,
             });
 
             // Apply albedo and normal maps to all materials of the model
@@ -147,14 +147,18 @@
 
         // Directional light
         const directionalLight = new THREE.DirectionalLight(0xf4f8ea, 1);
-        directionalLight.position.set(5, 10, 5); // position the light source
+        directionalLight.position.set(5, 25, 5); // position the light source
         scene.add(directionalLight);
 
         // Rim light for highlighting
-        const rimLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        const rimLight = new THREE.DirectionalLight(0xffe4b5, 0.7);
         rimLight.position.set(-5, 5, 10);
-        rimLight.castShadow = true; // Enable shadows for depth
         scene.add(rimLight);
+
+        // Fill light for darker areas
+        const fillLight = new THREE.DirectionalLight(0xfbf3e0, 0.5);
+        fillLight.position.set(-5, -5, -10);
+        scene.add(fillLight);
 
         // Add OrbitControls to allow zooming and rotation
         const controls = new OrbitControls(camera, renderer.domElement);
